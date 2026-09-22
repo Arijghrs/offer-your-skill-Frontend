@@ -1,4 +1,5 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   Bell,
   Home,
@@ -21,6 +22,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/lib/auth";
+
 function Logo({ className }) {
   return (
     <Link to="/" className={cn("inline-flex items-center gap-2", className)}>
@@ -31,6 +34,7 @@ function Logo({ className }) {
     </Link>
   );
 }
+
 const navLinks = [
   { to: "/home", label: "Home" },
   { to: "/explore", label: "Explore" },
@@ -38,7 +42,27 @@ const navLinks = [
   { to: "/my-requests", label: "My Requests" },
   { to: "/my-offers", label: "My Offers" },
 ];
+
 function Navbar() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  // Use the real authenticated user when available.
+  // Fall back to mock data only if necessary for the existing UI.
+  const displayUser = user
+    ? {
+        ...currentUser,
+        name: user.fullName,
+        email: user.email,
+        username: user.username,
+      }
+    : currentUser;
+
+  async function handleLogout() {
+    await logout();
+    navigate({ to: "/", replace: true });
+  }
+
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-card/85 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6">
@@ -50,7 +74,9 @@ function Navbar() {
               key={l.to}
               to={l.to}
               className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              activeProps={{ className: "bg-accent text-accent-foreground" }}
+              activeProps={{
+                className: "bg-accent text-accent-foreground",
+              }}
             >
               {l.label}
             </Link>
@@ -70,6 +96,7 @@ function Navbar() {
               <span className="absolute right-2 top-2 size-2 rounded-full bg-destructive" />
             </Link>
           </Button>
+
           <Button
             asChild
             variant="ghost"
@@ -85,29 +112,41 @@ function Navbar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                <Avatar user={currentUser} size="sm" />
+                <Avatar user={displayUser} size="sm" />
               </button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>{currentUser.name}</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                {displayUser.name}
+              </DropdownMenuLabel>
+
               <DropdownMenuSeparator />
+
               <DropdownMenuItem asChild>
                 <Link to="/profile">My profile</Link>
               </DropdownMenuItem>
+
               <DropdownMenuItem asChild>
                 <Link to="/my-requests">My requests</Link>
               </DropdownMenuItem>
+
               <DropdownMenuItem asChild>
                 <Link to="/my-offers">My offers</Link>
               </DropdownMenuItem>
+
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link to="/">Log out</Link>
+
+              <DropdownMenuItem onClick={handleLogout}>
+                Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button asChild className="hidden shadow-[var(--shadow-soft)] md:inline-flex">
+          <Button
+            asChild
+            className="hidden shadow-[var(--shadow-soft)] md:inline-flex"
+          >
             <Link to="/create">
               <Plus className="size-4" /> Post a Request
             </Link>
@@ -115,18 +154,31 @@ function Navbar() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Menu">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden"
+                aria-label="Menu"
+              >
                 <Menu className="size-5" />
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end">
               {navLinks.map((l) => (
                 <DropdownMenuItem key={l.to} asChild>
                   <Link to={l.to}>{l.label}</Link>
                 </DropdownMenuItem>
               ))}
+
               <DropdownMenuItem asChild>
                 <Link to="/messages">Messages</Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem onClick={handleLogout}>
+                Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -135,20 +187,30 @@ function Navbar() {
     </header>
   );
 }
+
 function BottomNav() {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const pathname = useRouterState({
+    select: (s) => s.location.pathname,
+  });
+
   const items = [
     { to: "/home", label: "Home", icon: Home },
     { to: "/explore", label: "Explore", icon: Search },
     { to: "/notifications", label: "Alerts", icon: Bell },
     { to: "/profile", label: "Profile", icon: UserIcon },
   ];
+
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
       <div className="relative mx-auto grid max-w-md grid-cols-5 items-end px-2 py-2">
         {items.slice(0, 2).map((i) => (
-          <NavItem key={i.to} {...i} active={pathname === i.to} />
+          <NavItem
+            key={i.to}
+            {...i}
+            active={pathname === i.to}
+          />
         ))}
+
         <div className="flex justify-center">
           <Link
             to="/create"
@@ -158,13 +220,19 @@ function BottomNav() {
             <Plus className="size-7" />
           </Link>
         </div>
+
         {items.slice(2).map((i) => (
-          <NavItem key={i.to} {...i} active={pathname === i.to} />
+          <NavItem
+            key={i.to}
+            {...i}
+            active={pathname === i.to}
+          />
         ))}
       </div>
     </nav>
   );
 }
+
 function NavItem({ to, label, icon: Icon, active }) {
   return (
     <Link
@@ -179,28 +247,52 @@ function NavItem({ to, label, icon: Icon, active }) {
     </Link>
   );
 }
+
 function AppShell({ children, wide }) {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
+
       <main
-        className={cn("mx-auto px-4 pb-28 pt-6 sm:px-6 md:pb-14", wide ? "max-w-7xl" : "max-w-5xl")}
+        className={cn(
+          "mx-auto px-4 pb-28 pt-6 sm:px-6 md:pb-14",
+          wide ? "max-w-7xl" : "max-w-5xl",
+        )}
       >
         {children}
       </main>
+
       <BottomNav />
     </div>
   );
 }
+
 function PageHeader({ title, description, action }) {
   return (
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-2xl font-extrabold sm:text-3xl">{title}</h1>
-        {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
+        <h1 className="text-2xl font-extrabold sm:text-3xl">
+          {title}
+        </h1>
+
+        {description && (
+          <p className="mt-1 text-sm text-muted-foreground">
+            {description}
+          </p>
+        )}
       </div>
+
       {action}
     </div>
   );
 }
-export { AppShell, BottomNav, LayoutGrid, Logo, Navbar, PageHeader };
+
+export {
+  AppShell,
+  BottomNav,
+  LayoutGrid,
+  Logo,
+  Navbar,
+  PageHeader,
+};
+
