@@ -31,18 +31,7 @@ function Landing() {
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6">
           <Logo />
           <nav className="ml-6 hidden items-center gap-1 md:flex">
-            <Link
-              to="/explore"
-              className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
-            >
-              Explore
-            </Link>
-            <Link
-              to="/categories"
-              className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
-            >
-              Categories
-            </Link>
+            
           </nav>
           <div className="ml-auto flex items-center gap-2">
             <Button asChild variant="ghost">
@@ -58,9 +47,7 @@ function Landing() {
       <section className="hero-gradient">
         <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:py-24">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-semibold text-muted-foreground">
-              <Sparkles className="size-3.5 text-teal" /> Tunisia's community of people who help
-            </span>
+            
             <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] sm:text-5xl lg:text-6xl">
               Need something? <span className="text-gradient">Ask Talab.</span>
             </h1>
@@ -70,12 +57,10 @@ function Landing() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
                 <Link to="/create">
-                  Post a Request <ArrowRight className="size-4" />
+                  Join us <ArrowRight className="size-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/explore">Explore Requests</Link>
-              </Button>
+              
             </div>
             <dl className="mt-10 grid max-w-lg grid-cols-3 gap-4">
               {[
@@ -177,7 +162,7 @@ function Landing() {
               <Link to="/register">Create your account</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
-              <Link to="/explore">Browse requests first</Link>
+              <Link to="/explore">contact us</Link>
             </Button>
           </div>
         </div>

@@ -36,9 +36,7 @@ function Logo({ className }) {
 }
 
 const navLinks = [
-  { to: "/home", label: "Home" },
   { to: "/explore", label: "Explore" },
-  { to: "/categories", label: "Categories" },
   { to: "/my-requests", label: "My Requests" },
   { to: "/my-offers", label: "My Offers" },
 ];

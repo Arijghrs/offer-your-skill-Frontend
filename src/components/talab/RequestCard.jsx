@@ -253,11 +253,7 @@ function RequestCard({ request, manageOffers = false }) {
             )}
           </span>
         </div>
-        <Button asChild size="sm">
-          <Link to="/request/$requestId" params={{ requestId: request.id }}>
-            View Request
-          </Link>
-        </Button>
+        
       </footer>
 
       {open &&
