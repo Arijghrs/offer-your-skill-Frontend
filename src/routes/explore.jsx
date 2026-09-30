@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { LayoutGrid, List, Search, SlidersHorizontal } from "lucide-react";
+import { LayoutGrid, List, Plus, Search, SlidersHorizontal } from "lucide-react";
 import { AppShell, PageHeader } from "@/components/talab/AppShell";
 import { RequestCard } from "@/components/talab/RequestCard";
 import { EmptyState } from "@/components/talab/primitives";
@@ -63,6 +63,7 @@ function Explore() {
   return (
     <AppShell wide>
       <PageHeader title="Explore Requests" description="Find someone who needs what you can do." />
+
 
       <div className="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         <aside className="surface h-fit space-y-5 p-5">
@@ -148,6 +149,15 @@ function Explore() {
         </aside>
 
         <div className="space-y-4">
+          <div className="flex justify-end">
+            <Link to="/create">
+              <Button className="gap-2">
+                <Plus className="size-4" />
+                Post a Request
+              </Button>
+            </Link>
+          </div>
+
           <div className="surface flex flex-wrap items-center gap-3 p-3">
             <div className="relative min-w-[220px] flex-1">
               <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -186,7 +196,7 @@ function Explore() {
             </div>
           </div>
 
-          <p className="text-sm text-muted-foreground">{results.length} requests found</p>
+
 
           {results.length === 0 ? (
             <EmptyState
